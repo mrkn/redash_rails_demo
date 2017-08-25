@@ -1,24 +1,43 @@
-# README
+# Redash and rails integration demo
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## 1. Launch redash
 
-Things you may want to cover:
+```console
+$ docker-compose build
+$ docker-compose up
+```
 
-* Ruby version
+## 2. Create Rails datasource
 
-* System dependencies
+![](doc/img/rails_datasource.png)
 
-* Configuration
+## 3. Create a new query and execute it
 
-* Database creation
+```ruby
+require 'redash'
+include Redash
 
-* Database initialization
+result = {}
 
-* How to run the test suite
+add_result_column result, 'age', 'Age', 'integer'
+add_result_column result, 'survived_count', 'Survived count', 'integer'
+add_result_column result, 'dead_count', 'Dead count', 'integer'
 
-* Services (job queues, cache servers, search engines, etc.)
+summary = Passenger.find_each.inject({}) do |h, pas|
+  if pas.age
+    age = (pas.age % 10) * 10
+    h[age] ||= []
+    h[age][pas.survived] ||= 0
+    h[age][pas.survived] += 1
+  end
+  h
+end
 
-* Deployment instructions
+summary.each do |age, age_summary|
+  add_result_row(result, age: age, survived_count: age_summary[1], dead_count: age_summary[0])
+end
 
-* ...
+commit_to_redash(result)
+```
+
+![](doc/img/rails_query.png)
