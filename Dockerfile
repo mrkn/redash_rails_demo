@@ -19,7 +19,7 @@ COPY . /rails_app
 ENV BUNDLE_PATH=/bundle
 
 RUN cd /rails_app && bundle install -j 4
-RUN bundle exec rake db:create db:migrate db:seed
+RUN cd /rails_app && bundle exec rake db:drop db:create db:migrate db:seed
 
 RUN chown -R redash /rails_app
 COPY python/redash_rails/query_runner/rails.py /app/redash/query_runner/
