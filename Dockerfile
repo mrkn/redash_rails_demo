@@ -20,10 +20,8 @@ ENV BUNDLE_PATH=/bundle
 
 RUN cd /rails_app && bundle install -j 4
 RUN cd /rails_app && bundle exec rake db:drop db:create db:migrate db:seed
+RUN cd /rails_app && bundle exec redash-rails-install /app
 
 RUN chown -R redash /rails_app
-COPY python/redash_rails/query_runner/rails.py /app/redash/query_runner/
-
-# ENV PYTHONPATH=/rails_app/python
 
 USER redash
