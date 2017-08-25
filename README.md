@@ -1,17 +1,23 @@
 # Redash and rails integration demo
 
-## 1. Launch redash
+## Rails query runner
+
+See the PoC implementation: [python/redash_rails/query_runner/rails.py](python/redash_rails/query_runner/rails.py).
+
+## Step to try this demo
+
+### 1. Launch redash
 
 ```console
 $ docker-compose build
 $ docker-compose up
 ```
 
-## 2. Create Rails datasource
+### 2. Create Rails datasource
 
 ![](doc/img/rails_datasource.png)
 
-## 3. Create a new query and execute it
+### 3. Create a new query and execute it
 
 ```ruby
 require 'redash'
